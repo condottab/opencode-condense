@@ -1,0 +1,63 @@
+{
+  "name": "opencode-condense",
+  "version": "0.1.0",
+  "description": "Background decision-pass context compaction for opencode: a small scorer model drops stale tool calls and results off the critical path, extending the effective context window of long agent sessions.",
+  "type": "module",
+  "license": "MIT",
+  "keywords": [
+    "opencode",
+    "plugin",
+    "context",
+    "compaction",
+    "llm",
+    "agent"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/condottab/opencode-condense.git"
+  },
+  "engines": {
+    "node": ">=18",
+    "opencode": ">=1.18.31"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./server": {
+      "import": "./dist/opencode-plugin.js"
+    }
+  },
+  "files": [
+    "dist",
+    "src",
+    "opencode",
+    "hooks",
+    "types",
+    "scripts/fake-decision-server.mjs",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "build:plugin": "esbuild opencode/plugin.ts --bundle --format=esm --platform=node --target=node18 --outfile=dist/opencode-plugin.js",
+    "install:opencode:v2": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/install-opencode-plugin-v2.ps1",
+    "verify:opencode:v2": "npx tsc -p tsconfig.opencode.json",
+    "prepublishOnly": "npm run build && npm run build:plugin",
+    "typecheck": "tsc --noEmit && npm run typecheck:hooks && npm run typecheck:opencode",
+    "test": "vitest run",
+    "demo": "tsx examples/demo.ts",
+    "typecheck:hooks": "tsc -p tsconfig.hooks.json",
+    "typecheck:opencode": "tsc -p tsconfig.opencode.json",
+    "validate:plugin": "claude plugin validate .claude-plugin/plugin.json"
+  },
+  "devDependencies": {
+    "@opencode-ai/plugin": "^1.18.31",
+    "@opencode/plugin": "^2.0.8",
+    "@types/node": "^22.10.2",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2",
+    "vitest": "^2.1.8"
+  }
+}

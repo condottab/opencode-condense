@@ -1,0 +1,16 @@
+{
+  "name": "opencode-condense",
+  "owner": {
+    "name": "condottab",
+    "url": "https://github.com/condottab"
+  },
+  "plugins": [
+    {
+      "name": "opencode-condense",
+      "source": "./",
+      "description": "Verbatim, scorer-guided context compaction for Claude Code sessions.",
+      "version": "0.1.0",
+      "license": "MIT"
+    }
+  ]
+}
