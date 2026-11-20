@@ -26,14 +26,18 @@ git clone https://github.com/condottab/opencode-condense
 
 ```jsonc
 {
-  "plugin": [
-    [
-      "C:/path/to/opencode-condense/opencode/entry.ts",
-      { "baseUrl": "http://127.0.0.1:8000/v1", "model": "your-scorer" }
-    ]
+  "plugins": [
+    {
+      "package": "C:/path/to/opencode-condense/opencode/entry.ts",
+      "options": { "baseUrl": "http://127.0.0.1:8000/v1", "model": "your-scorer" }
+    }
   ]
 }
 ```
+
+Current opencode reads `plugins` (entries `{package, options}`). The older
+`plugin: [[path, options]]` form is ignored by new versions — the plugin
+then silently never loads.
 
 Restart opencode — no build step, 2.x imports the TypeScript source
 directly. Every option can also be set as a `CONDENSE_*` env var
@@ -101,8 +105,11 @@ tests.
 
 ## Tuning a local scorer
 
-- `--parallel 1`, and `--ctx-size` ≥ `maxRequestTokens` (state + one batch
-  must fit: 32k is enough for the defaults).
+- `--parallel 1`, and keep `maxRequestTokens` below the server ubatch: with
+  a systemone endpoint llama-server rejects a prompt above `-ub` with HTTP
+  500 instead of chunking it. For the default `-ub 8192` use
+  `maxRequestTokens: 7800` (estimation slack included). `--ctx-size` covers
+  KV for the whole session (32k is enough for the defaults).
 - `--cache-type-k/v q8_0` halves KV memory; measured decision drift is far
   below `keepThreshold`, so it is a safe capacity trade.
 - Keep the ubatch in VRAM. On Windows (WDDM) an oversized ubatch can
